@@ -119,7 +119,8 @@ class FastRCNNLossComputation(object):
         self._proposals = proposals
         return proposals
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def __call__(self, class_logits, box_regression):
         """
         Computes the loss for Faster R-CNN.

@@ -4,7 +4,8 @@ import torch.distributed as dist
 from torch import nn
 
 from scipy.optimize import linear_sum_assignment
-from torch.cuda.amp import custom_fwd, custom_bwd
+# from torch.cuda.amp import custom_fwd, custom_bwd
+from torch.amp import custom_fwd, custom_bwd
 
 
 def box_area(boxes):
@@ -141,7 +142,8 @@ class HungarianMatcher(nn.Module):
         assert cost_class != 0 or cost_bbox != 0 or cost_giou != 0, "all costs cant be 0"
 
     @torch.no_grad()
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def forward(self, outputs, targets):
         """ Performs the matching
 
@@ -323,7 +325,8 @@ class SetCriterion(nn.Module):
         assert loss in loss_map, f'do you really want to compute {loss} loss?'
         return loss_map[loss](outputs, targets, indices, num_boxes, **kwargs)
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def forward(self, outputs, targets, *argrs, **kwargs):
         """ This performs the loss computation.
         Parameters:

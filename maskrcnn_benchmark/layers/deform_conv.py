@@ -310,7 +310,8 @@ class DeformConv(nn.Module):
         stdv = 1. / math.sqrt(n)
         self.weight.data.uniform_(-stdv, stdv)
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def forward(self, input, offset):
         return deform_conv(input, offset, self.weight, self.stride,
                            self.padding, self.dilation, self.groups,
@@ -375,7 +376,8 @@ class ModulatedDeformConv(nn.Module):
         if self.bias is not None:
             self.bias.data.zero_()
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def forward(self, input, offset, mask):
         return modulated_deform_conv(
             input, offset, mask, self.weight, self.bias, self.stride,
@@ -425,7 +427,8 @@ class ModulatedDeformConvPack(ModulatedDeformConv):
         self.conv_offset_mask.weight.data.zero_()
         self.conv_offset_mask.bias.data.zero_()
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def forward(self, input):
         out = self.conv_offset_mask(input)
         o1, o2, mask = torch.chunk(out, 3, dim=1)

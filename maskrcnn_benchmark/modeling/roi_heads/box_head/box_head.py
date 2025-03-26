@@ -21,7 +21,8 @@ class ROIBoxHead(torch.nn.Module):
         self.loss_evaluator = make_roi_box_loss_evaluator(cfg)
         self.onnx = cfg.MODEL.ONNX
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def forward(self, features, proposals, targets=None):
         """
         Arguments:

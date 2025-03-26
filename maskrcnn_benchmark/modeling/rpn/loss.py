@@ -91,7 +91,8 @@ class RPNLossComputation(object):
 
         return labels, regression_targets
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def __call__(self, anchors, objectness, box_regression, targets):
         """
         Arguments:
@@ -226,7 +227,8 @@ class FocalLossComputation(object):
 
         return labels, regression_targets
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def __call__(self, anchors, box_cls, box_regression, targets):
         """
         Arguments:
@@ -447,7 +449,8 @@ class FCOSLossComputation(object):
                      (top_bottom.min(dim=-1)[0] / top_bottom.max(dim=-1)[0])
         return torch.sqrt(centerness)
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def __call__(self, locations, box_cls, box_regression, centerness, targets):
         """
         Arguments:
@@ -844,7 +847,8 @@ class ATSSLossComputation(torch.nn.Module):
         assert not torch.isnan(centerness).any()
         return centerness
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def __call__(self, box_cls, box_regression, centerness, targets, anchors,
                  captions=None,
                  positive_map=None,

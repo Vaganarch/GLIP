@@ -34,7 +34,8 @@ class PostProcessor(nn.Module):
             box_coder = BoxCoder(weights=(10., 10., 5., 5.))
         self.box_coder = box_coder
 
-    @custom_fwd(cast_inputs=torch.float32)
+    # @custom_fwd(cast_inputs=torch.float32)
+    @custom_fwd(device_type='cuda', cast_inputs=torch.float32)
     def forward(self, x, boxes):
         """
         Arguments:
